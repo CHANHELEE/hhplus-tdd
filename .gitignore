@@ -9,6 +9,13 @@ build/
 .idea/jarRepositories.xml
 .idea/compiler.xml
 .idea/libraries/
+/.idea/.gitignore
+/.idea/git_toolbox_blame.xml
+/.idea/gradle.xml
+/.idea/jpa-buddy.xml
+/.idea/kotlinc.xml
+/.idea/misc.xml
+/.idea/vcs.xml
 *.iws
 *.iml
 *.ipr
