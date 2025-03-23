@@ -2,6 +2,7 @@ package io.hhplus.tdd.point.service
 
 import io.hhplus.tdd.database.PointHistoryTable
 import io.hhplus.tdd.database.UserPointTable
+import io.hhplus.tdd.util.fixture.PointHistoryFixture
 import io.hhplus.tdd.util.fixture.UserPointFixture
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.tuple
@@ -29,7 +30,7 @@ class PointServiceTest {
     fun `사용자의 포인트를 조회한다`() {
 
         //given
-        val userPoint = UserPointFixture.getDummyUserPoint()
+        val userPoint = UserPointFixture.get()
         given(userPointTable.selectById(1L)).willReturn(userPoint)
 
         //when
@@ -45,7 +46,7 @@ class PointServiceTest {
     fun `사용자의 포인트 이용 내역을 조회한다`() {
 
         //given
-        val userPointHistories = UserPointFixture.getDummyPointHistories()
+        val userPointHistories = PointHistoryFixture.get()
         given(pointHistoryTable.selectAllByUserId(1L)).willReturn(userPointHistories)
 
         //when

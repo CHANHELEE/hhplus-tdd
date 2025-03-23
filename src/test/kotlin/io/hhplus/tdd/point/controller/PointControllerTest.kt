@@ -1,6 +1,7 @@
 package io.hhplus.tdd.point.controller
 
 import io.hhplus.tdd.util.CommonControllerTest
+import io.hhplus.tdd.util.fixture.PointHistoryFixture
 import io.hhplus.tdd.util.fixture.UserPointFixture
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
@@ -16,7 +17,7 @@ class PointControllerTest : CommonControllerTest() {
     fun `사용자의 포인트 조회 API`() {
 
         // given
-        val userPoint = UserPointFixture.getDummyUserPoint()
+        val userPoint = UserPointFixture.get()
         given(pointService.getUserPoint(1L)).willReturn(userPoint)
 
         // when && then
@@ -34,7 +35,7 @@ class PointControllerTest : CommonControllerTest() {
     fun `사용자의 포인트 이용 내역 조회 API`() {
 
         // given
-        val userPointHistories = UserPointFixture.getDummyPointHistories()
+        val userPointHistories = PointHistoryFixture.get()
         given(pointService.getUserPointHistories(1L)).willReturn(userPointHistories)
 
         // when && then
