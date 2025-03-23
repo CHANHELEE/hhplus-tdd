@@ -29,4 +29,24 @@ class PointControllerTest : CommonControllerTest() {
             .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(userPoint.id))
             .andExpect(MockMvcResultMatchers.jsonPath("$.point").value(userPoint.point))
     }
+
+    @Test
+    fun `사용자의 포인트 이용 내역 조회 API`() {
+
+        // given
+        val userPointHistories = UserPointFixture.getDummyPointHistories()
+        given(pointService.getUserPointHistories(1L)).willReturn(userPointHistories)
+
+        // when && then
+        mockMvc
+            .perform(
+                MockMvcRequestBuilders.get("/point/{userId}/histories", 1L)
+            )
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(userPointHistories[0].id))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].userId").value(userPointHistories[0].userId))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].type").value(userPointHistories[0].type.name))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].amount").value(userPointHistories[0].amount))
+    }
 }

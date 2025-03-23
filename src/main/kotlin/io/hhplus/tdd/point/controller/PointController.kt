@@ -19,15 +19,10 @@ class PointController(
         @PathVariable userPointId: Long,
     ): UserPoint = pointService.getUserPoint(userPointId)
 
-    /**
-     * TODO - 특정 유저의 포인트 충전/이용 내역을 조회하는 기능을 작성해주세요.
-     */
-    @GetMapping("{id}/histories")
+    @GetMapping("{userId}/histories")
     fun history(
-        @PathVariable id: Long,
-    ): List<PointHistory> {
-        return emptyList()
-    }
+        @PathVariable userId: Long,
+    ): List<PointHistory> = pointService.getUserPointHistories(userId)
 
     /**
      * TODO - 특정 유저의 포인트를 충전하는 기능을 작성해주세요.
