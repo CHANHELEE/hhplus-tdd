@@ -2,6 +2,7 @@ package io.hhplus.tdd.point.service
 
 import io.hhplus.tdd.database.PointHistoryTable
 import io.hhplus.tdd.database.UserPointTable
+import io.hhplus.tdd.point.common.UserPointLockManager
 import io.hhplus.tdd.point.model.PointHistory
 import io.hhplus.tdd.point.model.TransactionType
 import io.hhplus.tdd.point.model.UserPoint
@@ -25,21 +26,24 @@ class PointService(
     fun charge(
         userId: Long,
         userPointCommand: UserPointCommand.Charge,
-    ): UserPoint {
-
+    ): UserPoint = UserPointLockManager.withLock(userId) {
         val userPoint = userPointTable.selectById(userId)
 
         var chargedUserPoint = userPoint.charge(userPointCommand.amount)
         chargedUserPoint = userPointTable.insertOrUpdate(userId, chargedUserPoint.point)
-
-        userPointHistoryTable.insert(userId, userPointCommand.amount, TransactionType.CHARGE, chargedUserPoint.updateMillis)
-        return chargedUserPoint
+        userPointHistoryTable.insert(
+            userId,
+            userPointCommand.amount,
+            TransactionType.CHARGE,
+            chargedUserPoint.updateMillis
+        )
+        chargedUserPoint
     }
 
     fun use(
         userId: Long,
         userPointCommand: UserPointCommand.Use,
-    ): UserPoint {
+    ): UserPoint = UserPointLockManager.withLock(userId) {
 
         val userPoint = userPointTable.selectById(userId)
 
@@ -52,7 +56,6 @@ class PointService(
             TransactionType.USE,
             usedUserPoint.updateMillis
         )
-        return usedUserPoint
+        usedUserPoint
     }
-
 }
