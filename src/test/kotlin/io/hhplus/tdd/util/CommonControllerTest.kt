@@ -1,5 +1,6 @@
 package io.hhplus.tdd.util
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.hhplus.tdd.point.service.PointService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -12,4 +13,6 @@ abstract class CommonControllerTest {
 
     @MockBean
     protected lateinit var pointService: PointService
+
+    protected  val objectMapper = ObjectMapper()
 }

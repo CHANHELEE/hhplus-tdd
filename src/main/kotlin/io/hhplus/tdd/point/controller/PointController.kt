@@ -3,6 +3,8 @@ package io.hhplus.tdd.point.controller
 import io.hhplus.tdd.point.model.PointHistory
 import io.hhplus.tdd.point.service.PointService
 import io.hhplus.tdd.point.model.UserPoint
+import io.hhplus.tdd.point.model.command.UserPointCommand.Companion.toCommand
+import io.hhplus.tdd.point.model.request.UserPointRequest
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.*
@@ -24,16 +26,11 @@ class PointController(
         @PathVariable userId: Long,
     ): List<PointHistory> = pointService.getUserPointHistories(userId)
 
-    /**
-     * TODO - 특정 유저의 포인트를 충전하는 기능을 작성해주세요.
-     */
-    @PatchMapping("{id}/charge")
+    @PatchMapping("{userId}/charge")
     fun charge(
-        @PathVariable id: Long,
-        @RequestBody amount: Long,
-    ): UserPoint {
-        return UserPoint(0, 0, 0)
-    }
+        @PathVariable userId: Long,
+        @RequestBody userPointRequest: UserPointRequest.Charge
+    ): UserPoint = pointService.charge(userId, userPointRequest.toCommand())
 
     /**
      * TODO - 특정 유저의 포인트를 사용하는 기능을 작성해주세요.
