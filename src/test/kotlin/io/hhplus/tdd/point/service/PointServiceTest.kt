@@ -3,9 +3,7 @@ package io.hhplus.tdd.point.service
 import io.hhplus.tdd.database.PointHistoryTable
 import io.hhplus.tdd.database.UserPointTable
 import io.hhplus.tdd.point.model.TransactionType
-import io.hhplus.tdd.util.fixture.PointHistoryFixture
-import io.hhplus.tdd.util.fixture.UserPointChargeCommandFixture
-import io.hhplus.tdd.util.fixture.UserPointFixture
+import io.hhplus.tdd.util.fixture.*
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.tuple
 import org.junit.jupiter.api.Test
@@ -109,6 +107,50 @@ class PointServiceTest {
             pointChargeCommand.amount,
             TransactionType.CHARGE,
             chargedUserPoint.updateMillis
+        )
+
+    }
+
+    @Test
+    fun `사용자 포인트를 시용한다`() {
+
+        //given
+        val requestUserId = 1L
+        val pointUseCommand = UserPointUseCommandFixture.get()
+        val userPoint = UserPointFixture.get()
+        val usedUserPoint = UserPointFixture.get(point = userPoint.point - pointUseCommand.amount)
+        val userPointHistories = PointHistoryFixture.get()
+
+        given(userPointTable.selectById(requestUserId))
+            .willReturn(userPoint)
+
+        given(userPointTable.insertOrUpdate(requestUserId, usedUserPoint.point))
+            .willReturn(usedUserPoint)
+
+        given(
+            pointHistoryTable.insert(
+                requestUserId,
+                pointUseCommand.amount,
+                TransactionType.USE,
+                usedUserPoint.updateMillis
+            )
+        ).willReturn(userPointHistories)
+
+        //when
+        val returnedUserPoint = pointService.use(requestUserId, pointUseCommand)
+
+        //then
+        assertThat(returnedUserPoint)
+            .extracting("id", "point")
+            .contains(usedUserPoint.id, usedUserPoint.point)
+
+        verify(userPointTable, times(1)).selectById(requestUserId)
+        verify(userPointTable, times(1)).insertOrUpdate(requestUserId, usedUserPoint.point)
+        verify(pointHistoryTable, times(1)).insert(
+            requestUserId,
+            pointUseCommand.amount,
+            TransactionType.USE,
+            usedUserPoint.updateMillis
         )
 
     }

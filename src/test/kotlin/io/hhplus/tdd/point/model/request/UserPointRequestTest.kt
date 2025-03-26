@@ -25,4 +25,29 @@ class UserPointRequestTest {
         }
 
     }
+
+    @Nested
+    inner class Use {
+        @Test
+        fun `사용 포인트 값이 최소값 이상이면 인스턴스 생성에 성공한다`() {
+
+            //given && when
+            val request = UserPointRequest.Use(UserPointRequest.Use.MIN)
+
+            //then
+            assertEquals(UserPointRequest.Use.MIN, request.amount)
+        }
+
+        @Test
+        fun `사용 포인트 값이 최소값 미만이면 IllegalArgumentException 예외가 발생한다`() {
+
+            //given
+            val amount = UserPointRequest.Use.MIN - 1
+
+            //when && then
+            assertThrows<IllegalArgumentException> {
+                UserPointRequest.Use(amount)
+            }
+        }
+    }
 }

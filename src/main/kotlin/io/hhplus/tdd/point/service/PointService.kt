@@ -35,4 +35,24 @@ class PointService(
         userPointHistoryTable.insert(userId, userPointCommand.amount, TransactionType.CHARGE, chargedUserPoint.updateMillis)
         return chargedUserPoint
     }
+
+    fun use(
+        userId: Long,
+        userPointCommand: UserPointCommand.Use,
+    ): UserPoint {
+
+        val userPoint = userPointTable.selectById(userId)
+
+        var usedUserPoint = userPoint.use(userPointCommand.amount)
+        usedUserPoint = userPointTable.insertOrUpdate(userId, usedUserPoint.point)
+
+        userPointHistoryTable.insert(
+            userId,
+            userPointCommand.amount,
+            TransactionType.USE,
+            usedUserPoint.updateMillis
+        )
+        return usedUserPoint
+    }
+
 }

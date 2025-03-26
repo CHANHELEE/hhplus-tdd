@@ -32,14 +32,10 @@ class PointController(
         @RequestBody userPointRequest: UserPointRequest.Charge
     ): UserPoint = pointService.charge(userId, userPointRequest.toCommand())
 
-    /**
-     * TODO - 특정 유저의 포인트를 사용하는 기능을 작성해주세요.
-     */
-    @PatchMapping("{id}/use")
+    @PatchMapping("{userId}/use")
     fun use(
-        @PathVariable id: Long,
-        @RequestBody amount: Long,
-    ): UserPoint {
-        return UserPoint(0, 0, 0)
-    }
+        @PathVariable userId: Long,
+        @RequestBody userPointRequest: UserPointRequest.Use
+    ): UserPoint = pointService.use(userId, userPointRequest.toCommand())
+
 }

@@ -26,5 +26,14 @@ data class UserPoint(
         return UserPoint(id, chargedPoint, updateMillis)
     }
 
+    fun use(amount:Long): UserPoint {
+
+        val usedPoint = point - amount
+        require(usedPoint >= MIN) {
+            throw IllegalArgumentException("포인트 잔고가 부족하여 포인트 사용이 불가합니다.")
+        }
+        return UserPoint(id, usedPoint, updateMillis)
+    }
+
 }
 

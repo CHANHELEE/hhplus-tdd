@@ -8,9 +8,16 @@ class UserPointCommand {
         val amount: Long,
     )
 
+    data class Use(
+        val amount: Long,
+    )
+
     companion object {
 
         fun UserPointRequest.Charge.toCommand(): Charge =
             Charge(amount)
+
+        fun UserPointRequest.Use.toCommand(): Use =
+            Use(amount)
     }
 }

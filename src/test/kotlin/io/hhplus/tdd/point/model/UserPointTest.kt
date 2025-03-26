@@ -60,4 +60,36 @@ class UserPointTest {
 
     }
 
+    @Nested
+    inner class Use {
+
+        @Test
+        fun `포인트 사용에 성공한다`() {
+
+            //given
+            val useAmount = UserPoint.MAX - 1
+            val userPoint = UserPoint(id = 1L, point = UserPoint.MAX, updateMillis = System.currentTimeMillis())
+            val restPoint = userPoint.point - useAmount
+
+            //when
+            val usedPoint = userPoint.use(useAmount)
+
+            //then
+            assertEquals(restPoint, usedPoint.point)
+        }
+
+        @Test
+        fun `사용된 포인트 값이 최소값 미만이면 IllegalArgumentException 예외가 발생한다`() {
+
+            //given
+            val userPoint = UserPoint(id = 1L, point = UserPoint.MIN, updateMillis = System.currentTimeMillis())
+            val usePoint = UserPoint.MIN + 1
+
+            //when && then
+            assertThrows<IllegalArgumentException> {
+                userPoint.use(usePoint)
+            }
+        }
+    }
+
 }

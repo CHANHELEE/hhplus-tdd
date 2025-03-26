@@ -20,10 +20,22 @@ object UserPointChargeRequestFixture {
     ): UserPointRequest.Charge = UserPointRequest.Charge(amount)
 }
 
+object UserPointUseRequestFixture {
+    fun get(
+        amount: Long = 10_000L,
+    ): UserPointRequest.Use = UserPointRequest.Use(amount)
+}
+
 object UserPointChargeCommandFixture {
     fun get(
         amount: Long = 10_000L,
     ): UserPointCommand.Charge = UserPointCommand.Charge(amount)
+}
+
+object UserPointUseCommandFixture {
+    fun get(
+        amount: Long = 10_000L,
+    ): UserPointCommand.Use = UserPointCommand.Use(amount)
 }
 
 object PointHistoryFixture {
