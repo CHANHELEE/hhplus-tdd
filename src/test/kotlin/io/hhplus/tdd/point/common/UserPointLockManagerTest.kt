@@ -15,13 +15,16 @@ class UserPointLockManagerTest {
 
         val userId = 1L
         val executor = Executors.newSingleThreadExecutor()
+        val latch = CountDownLatch(1)
 
         executor.submit {
             UserPointLockManager.withLock(userId) {
+                latch.countDown()
                 Thread.sleep(6000)
-                executor.shutdownNow()
             }
         }
+        latch.await()
+        executor.shutdown()
 
         assertThrows<IllegalStateException> {
             UserPointLockManager.withLock(userId) {
