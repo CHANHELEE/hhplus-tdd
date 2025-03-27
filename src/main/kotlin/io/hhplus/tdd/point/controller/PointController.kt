@@ -1,0 +1,41 @@
+package io.hhplus.tdd.point.controller
+
+import io.hhplus.tdd.point.model.PointHistory
+import io.hhplus.tdd.point.service.PointService
+import io.hhplus.tdd.point.model.UserPoint
+import io.hhplus.tdd.point.model.command.UserPointCommand.Companion.toCommand
+import io.hhplus.tdd.point.model.request.UserPointRequest
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import org.springframework.web.bind.annotation.*
+
+@RestController
+@RequestMapping("/point")
+class PointController(
+    private val pointService: PointService
+) {
+    private val logger: Logger = LoggerFactory.getLogger(javaClass)
+
+    @GetMapping("{userPointId}")
+    fun point(
+        @PathVariable userPointId: Long,
+    ): UserPoint = pointService.getUserPoint(userPointId)
+
+    @GetMapping("{userId}/histories")
+    fun history(
+        @PathVariable userId: Long,
+    ): List<PointHistory> = pointService.getUserPointHistories(userId)
+
+    @PatchMapping("{userId}/charge")
+    fun charge(
+        @PathVariable userId: Long,
+        @RequestBody userPointRequest: UserPointRequest.Charge
+    ): UserPoint = pointService.charge(userId, userPointRequest.toCommand())
+
+    @PatchMapping("{userId}/use")
+    fun use(
+        @PathVariable userId: Long,
+        @RequestBody userPointRequest: UserPointRequest.Use
+    ): UserPoint = pointService.use(userId, userPointRequest.toCommand())
+
+}
